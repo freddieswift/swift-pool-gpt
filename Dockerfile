@@ -1,4 +1,4 @@
-FROM node:22-alpine AS web-build
+FROM node:22-bookworm-slim
 WORKDIR /build/web
 
 COPY web/package.json web/package-lock.json ./
@@ -9,14 +9,14 @@ ENV VITE_API_BASE_URL=/api/v1
 ENV VITE_APP_NAME=SwiftPool
 RUN npm run build
 
-FROM node:22-alpine AS api-deps
+FROM node:22-bookworm-slim AS api-deps
 WORKDIR /build/api
 ENV NODE_ENV=production
 
 COPY api/package.json api/package-lock.json ./
 RUN npm ci --omit=dev
 
-FROM node:22-alpine AS runtime
+FROM node:22-bookworm-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
