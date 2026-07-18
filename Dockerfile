@@ -1,26 +1,22 @@
-FROM node:20-alpine AS web-build
+FROM node:22-alpine AS web-build
 WORKDIR /build/web
 
 COPY web/package.json web/package-lock.json ./
-
-# Vite and the React plugin are devDependencies but are required to compile
-# the frontend. Explicitly include them even when Railway sets production mode.
-ENV NODE_ENV=development
-ENV NPM_CONFIG_PRODUCTION=false
-RUN npm ci --include=dev
-RUN ./node_modules/.bin/vite build
+RUN npm ci
 
 COPY web/ ./
 ENV VITE_API_BASE_URL=/api/v1
 ENV VITE_APP_NAME=SwiftPool
 RUN npm run build
 
-FROM node:20-alpine AS api-deps
+FROM node:22-alpine AS api-deps
 WORKDIR /build/api
+ENV NODE_ENV=production
+
 COPY api/package.json api/package-lock.json ./
 RUN npm ci --omit=dev
 
-FROM node:20-alpine AS runtime
+FROM node:22-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
