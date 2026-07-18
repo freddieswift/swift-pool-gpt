@@ -20,8 +20,7 @@ COPY --from=api-deps /build/api/node_modules ./node_modules
 COPY api/package.json api/package-lock.json ./
 COPY api/src ./src
 COPY api/migrations ./migrations
-COPY api/seeders ./seeders
-COPY api/.sequelizerc api/sequelize.config.cjs ./
+COPY api/sequelize.config.cjs ./
 COPY --from=web-build /build/web/dist ./public
 
 EXPOSE 3000
