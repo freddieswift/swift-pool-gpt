@@ -5,7 +5,10 @@ COPY web/package.json web/package-lock.json ./
 
 # Vite and the React plugin are devDependencies but are required to compile
 # the frontend. Explicitly include them even when Railway sets production mode.
+ENV NODE_ENV=development
+ENV NPM_CONFIG_PRODUCTION=false
 RUN npm ci --include=dev
+RUN ./node_modules/.bin/vite build
 
 COPY web/ ./
 ENV VITE_API_BASE_URL=/api/v1
